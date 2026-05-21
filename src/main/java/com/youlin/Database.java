@@ -25,13 +25,19 @@ public class Database {
     public static void saveFundData(Fund fund) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = createHeaders();
-        headers.set("Prefer", "resolution=merge-duplicates"); // 處理衝突 (Upsert)
 
-        HttpEntity<Fund> entity = new HttpEntity<>(fund, headers);
+        // 1. 設定 Header 告訴 Supabase 遇到重複請合併
+        headers.set("Prefer", "resolution=merge-duplicates");
 
         try {
-            restTemplate.postForEntity(BASE_URL, entity, String.class);
-            System.out.println("✅ 成功寫入資料: " + fund.getName());
+            // 2. 關鍵：在 URL 後面加上 on_conflict=name
+            // 這樣 Supabase 才知道要用 name 這個欄位來判斷重複
+            String url = BASE_URL + "?on_conflict=name";
+
+            HttpEntity<Fund> entity = new HttpEntity<>(fund, headers);
+            restTemplate.postForEntity(url, entity, String.class);
+
+            System.out.println("✅ 成功寫入/更新資料: " + fund.getName());
         } catch (Exception e) {
             System.err.println("❌ 寫入失敗: " + e.getMessage());
         }
