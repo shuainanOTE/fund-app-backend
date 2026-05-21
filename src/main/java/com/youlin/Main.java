@@ -1,0 +1,14 @@
+package com.youlin;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+@SpringBootApplication
+@EnableScheduling
+public class Main {
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+        System.out.println("🚀 系統已啟動，排程任務就緒！");
+    }
+}
