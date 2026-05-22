@@ -61,6 +61,10 @@ public class FundController {
         FundService service = new FundService();
         service.updateFund("安聯台灣科技基金", "ACDD04");
         service.updateFund("野村台灣運籌基金", "ackh03");
+        service.updateFund("路博邁台灣5G股票基金T累積型", "acnb01");
+        service.updateFund("國泰台灣高股息基金-A不配息(台幣)", "accy149");
+        service.updateFund("路博邁台日雙星股票基金T累積型(台幣)", "ACNB180");
+        service.updateFund("PIMCO收益增長基金-BM級類別", "pima3");
         return "✅ 資料已於 " + LocalDateTime.now() + " 更新完成！";
     }
 }
