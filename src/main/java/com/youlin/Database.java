@@ -2,10 +2,8 @@ package com.youlin;
 
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 
 public class Database {
     // 你的 Supabase API 基礎路徑
@@ -22,24 +20,27 @@ public class Database {
         return headers;
     }
 
+
     public static void saveFundData(Fund fund) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = createHeaders();
-
-        // 1. 設定 Header 告訴 Supabase 遇到重複請合併
+        // 關鍵：告訴 Supabase 如果衝突了，請執行更新 (on_conflict=name,update_date)
         headers.set("Prefer", "resolution=merge-duplicates");
 
         try {
-            // 2. 關鍵：在 URL 後面加上 on_conflict=name
-            // 這樣 Supabase 才知道要用 name 這個欄位來判斷重複
-            String url = BASE_URL + "?on_conflict=name";
+            Map<String, Object> body = new HashMap<>();
+            body.put("name", fund.getName());
+            body.put("nav_today", fund.getNav_today());
+            body.put("update_date", fund.getDate());
 
-            HttpEntity<Fund> entity = new HttpEntity<>(fund, headers);
-            restTemplate.postForEntity(url, entity, String.class);
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-            System.out.println("✅ 成功寫入/更新資料: " + fund.getName());
+            // 使用 POST，因為有了複合唯一鍵，Supabase 會自動處理更新
+            restTemplate.postForEntity(BASE_URL + "?on_conflict=name,update_date", entity, String.class);
+
+            System.out.println("✅ 成功同步: " + fund.getName() + " (日期: " + fund.getDate() + ")");
         } catch (Exception e) {
-            System.err.println("❌ 寫入失敗: " + e.getMessage());
+            System.err.println("❌ 同步失敗: " + e.getMessage());
         }
     }
 

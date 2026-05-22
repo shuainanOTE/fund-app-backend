@@ -4,29 +4,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 
 public class Fund {
+    private Long id;
     private String name;
-    private double nav;
 
-    @JsonProperty("update_date") // 確保與資料庫欄位名稱對應
+    @JsonProperty("nav_today") // 這裡！強制 JSON 輸出變成 "nav_today"
+    private double nav_today;  // 變數名稱統一改為 nav_today
+
+    @JsonProperty("update_date")
     private LocalDate updateDate;
 
-    // 1. 必須要有一個空建構子，讓 JSON 轉換器能運作
     public Fund() {}
 
-    // 2. 這是你原本的建構子
-    public Fund(String name, double nav, LocalDate updateDate) {
+    public Fund(String name, double nav_today, LocalDate updateDate) {
         this.name = name;
-        this.nav = nav;
+        this.nav_today = nav_today;
         this.updateDate = updateDate;
     }
 
-    // 3. Setter 方法也是必要的，否則轉換器沒辦法把值填進去
+    // Setter
     public void setName(String name) { this.name = name; }
-    public void setNav(double nav) { this.nav = nav; }
+    public void setNav_today(double nav_today) { this.nav_today = nav_today; }
     public void setUpdateDate(LocalDate updateDate) { this.updateDate = updateDate; }
 
     // Getter
     public String getName() { return name; }
-    public double getNav() { return nav; }
+    public double getNav_today() { return nav_today; } // 方法名也統一
     public LocalDate getUpdateDate() { return updateDate; }
+
+    public String getDate() {
+        return updateDate != null ? updateDate.toString() : "";
+    }
+
+    public Long getId() { return id; }
 }
