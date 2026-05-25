@@ -19,40 +19,37 @@ public class FundController {
         List<Fund> allFunds = Database.fetchAll();
         List<FundDisplayDTO> result = new ArrayList<>();
 
-        // 1. 將資料按基金名稱分組
+        // 按名稱分組
         Map<String, List<Fund>> grouped = allFunds.stream()
                 .collect(Collectors.groupingBy(Fund::getName));
 
-        // 2. 對每個基金，取出最新兩筆並計算
         for (String name : grouped.keySet()) {
             List<Fund> history = grouped.get(name);
-
-            // 依日期排序（最新的在最前面）
+            // 確保日期由新到舊
             history.sort((a, b) -> b.getUpdateDate().compareTo(a.getUpdateDate()));
 
+            Fund today = history.get(0); // 最新的一筆
+            double changePercent = 0.0;
+
+            // 如果有兩筆以上，且第二筆數值不同，才計算漲跌
             if (history.size() >= 2) {
-                Fund today = history.get(0);
                 Fund yesterday = history.get(1);
+                if (today.getNav() != yesterday.getNav()) {
+                    BigDecimal todayNav = BigDecimal.valueOf(today.getNav());
+                    BigDecimal yesterdayNav = BigDecimal.valueOf(yesterday.getNav());
 
-                // 1. 轉為 BigDecimal 進行運算
-                BigDecimal todayNav = BigDecimal.valueOf(today.getNav_today());
-                BigDecimal yesterdayNav = BigDecimal.valueOf(yesterday.getNav_today());
-
-                // 2. 公式: ((今天 - 昨天) / 昨天) * 100
-                // 注意：BigDecimal 的除法需要指定精度與捨入模式
-                BigDecimal diff = todayNav.subtract(yesterdayNav);
-                BigDecimal change = diff.divide(yesterdayNav, 4, RoundingMode.HALF_UP)
-                        .multiply(BigDecimal.valueOf(100));
-
-                // 3. 取到小數點後兩位 (四捨五入)
-                double finalChange = change.setScale(2, RoundingMode.HALF_UP).doubleValue();
-
-                result.add(new FundDisplayDTO(name, today.getNav_today(), finalChange, today.getDate()));
-            } else if (history.size() == 1) {
-                // 如果只有一筆資料，漲跌幅設為 0
-                result.add(new FundDisplayDTO(name, history.get(0).getNav_today(), 0.0, history.get(0).getDate()));
+                    changePercent = todayNav.subtract(yesterdayNav)
+                            .divide(yesterdayNav, 4, RoundingMode.HALF_UP)
+                            .multiply(BigDecimal.valueOf(100))
+                            .setScale(2, RoundingMode.HALF_UP)
+                            .doubleValue();
+                }
             }
+
+            // 使用正規化後的名稱
+            result.add(new FundDisplayDTO(name, today.getNav(), changePercent, today.getUpdateDate().toString()));
         }
+        System.out.println("重新整理頁面成功！");
         return result;
     }
 
@@ -70,15 +67,15 @@ public class FundController {
 }
 
 class FundDisplayDTO {
-    public String name;          // 前端直接讀 stock.name
-    public double nav_today;           // 前端直接讀 stock.price
-    public double changePercent; // 前端直接讀 stock.profitPercent
-    public String update_date;   // 前端直接讀 stock.update_date
+    public String name;
+    public double nav;           // 改名 nav
+    public double changePercent;
+    public String updateDate;    // 改名 updateDate
 
-    public FundDisplayDTO(String name, double nav_today, double changePercent, String update_date) {
+    public FundDisplayDTO(String name, double nav, double changePercent, String updateDate) {
         this.name = name;
-        this.nav_today = nav_today;
+        this.nav = nav;
         this.changePercent = changePercent;
-        this.update_date = update_date;
+        this.updateDate = updateDate;
     }
 }

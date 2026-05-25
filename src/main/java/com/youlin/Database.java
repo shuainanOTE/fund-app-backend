@@ -2,14 +2,10 @@ package com.youlin;
 
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.*;
 
 public class Database {
-    // 你的 Supabase API 基礎路徑
     private static final String BASE_URL = "https://vzhlovwzlwghjgarmdcs.supabase.co/rest/v1/funds";
-
-    // 請將這裡換成新的 Service Role Key (Generate 後的)
     private static final String API_KEY = System.getenv("SUPABASE_API_KEY");
 
     private static HttpHeaders createHeaders() {
@@ -20,25 +16,26 @@ public class Database {
         return headers;
     }
 
-
     public static void saveFundData(Fund fund) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = createHeaders();
-        // 關鍵：告訴 Supabase 如果衝突了，請執行更新 (on_conflict=name,update_date)
+        // 確保衝突時執行更新
         headers.set("Prefer", "resolution=merge-duplicates");
 
         try {
             Map<String, Object> body = new HashMap<>();
             body.put("name", fund.getName());
-            body.put("nav_today", fund.getNav_today());
-            body.put("update_date", fund.getDate());
+            // 這裡改成新的欄位名稱 nav
+            body.put("nav", fund.getNav());
+            // updateDate 已經是 LocalDate，這裡直接用它
+            body.put("update_date", fund.getUpdateDate().toString());
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-            // 使用 POST，因為有了複合唯一鍵，Supabase 會自動處理更新
+            // POST 到 Supabase，on_conflict 指定為 name 與 update_date
             restTemplate.postForEntity(BASE_URL + "?on_conflict=name,update_date", entity, String.class);
 
-            System.out.println("✅ 成功同步: " + fund.getName() + " (日期: " + fund.getDate() + ")");
+            System.out.println("✅ 成功同步: " + fund.getName() + " (日期: " + fund.getUpdateDate() + ")");
         } catch (Exception e) {
             System.err.println("❌ 同步失敗: " + e.getMessage());
         }
@@ -49,7 +46,6 @@ public class Database {
         HttpHeaders headers = createHeaders();
 
         try {
-            // 使用 select=* 撈取所有資料
             ResponseEntity<Fund[]> response = restTemplate.exchange(
                     BASE_URL + "?select=*", HttpMethod.GET, new HttpEntity<>(headers), Fund[].class);
 

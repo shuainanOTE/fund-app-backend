@@ -7,33 +7,36 @@ public class Fund {
     private Long id;
     private String name;
 
-    @JsonProperty("nav_today") // 這裡！強制 JSON 輸出變成 "nav_today"
-    private double nav_today;  // 變數名稱統一改為 nav_today
+    // 命名改為 nav，但在 JSON 輸出時維持 "nav" (或你想保持的名稱)
+    private double nav;
 
+    // 使用 LocalDate，這對後續日期運算非常方便
     @JsonProperty("update_date")
     private LocalDate updateDate;
 
     public Fund() {}
 
-    public Fund(String name, double nav_today, LocalDate updateDate) {
+    public Fund(String name, double nav, LocalDate updateDate) {
         this.name = name;
-        this.nav_today = nav_today;
+        this.nav = nav;
         this.updateDate = updateDate;
     }
 
-    // Setter
-    public void setName(String name) { this.name = name; }
-    public void setNav_today(double nav_today) { this.nav_today = nav_today; }
-    public void setUpdateDate(LocalDate updateDate) { this.updateDate = updateDate; }
-
-    // Getter
-    public String getName() { return name; }
-    public double getNav_today() { return nav_today; } // 方法名也統一
-    public LocalDate getUpdateDate() { return updateDate; }
-
-    public String getDate() {
-        return updateDate != null ? updateDate.toString() : "";
-    }
+    // --- Standard Getters and Setters ---
 
     public Long getId() { return id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public double getNav() { return nav; }
+    public void setNav(double nav) { this.nav = nav; }
+
+    public LocalDate getUpdateDate() { return updateDate; }
+    public void setUpdateDate(LocalDate updateDate) { this.updateDate = updateDate; }
+
+    // 用於輔助前端顯示的字串格式
+    public String getFormattedDate() {
+        return updateDate != null ? updateDate.toString() : "";
+    }
 }
