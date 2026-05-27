@@ -16,6 +16,16 @@ public class FundService {
         PAGE_CONFIG.put("pima3", "yp010001");
     }
 
+    public void updateAllFunds() {
+        updateFund("安聯台灣科技基金", "ACDD04");
+        updateFund("野村台灣運籌基金", "ackh03");
+        updateFund("路博邁台灣5G股票基金T累積型", "acnb01");
+        updateFund("國泰台灣高股息基金-A不配息(台幣)", "accy149");
+        updateFund("路博邁台日雙星股票基金T累積型(台幣)", "ACNB180");
+        updateFund("PIMCO收益增長基金-BM級類別", "pima3");
+    }
+
+
     public void updateFund(String fundName, String fundCode) {
         try {
             String pageCode = PAGE_CONFIG.getOrDefault(fundCode, "yp010000");
