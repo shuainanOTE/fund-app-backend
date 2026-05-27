@@ -53,13 +53,12 @@ public class FundController {
 
     @GetMapping("/api/update")
     public String triggerUpdate() {
-        fundService.updateAllFunds(); // 簡化成這樣！
+        fundService.updateAllFunds();
         return "✅ 資料已於 " + LocalDateTime.now() + " 更新完成！";
     }
 
     @GetMapping("/ping")
     public String ping() {
-        System.out.println("10分鐘喚醒成功");
         return "ping";
     }
 
@@ -67,6 +66,6 @@ public class FundController {
     public void scheduledScraper() {
         System.out.println("--- 開始執行每日爬蟲任務 ---");
         fundService.updateAllFunds();
-        System.out.println("--- 排程任務完成 ---");
+        System.out.println("--- 更新任務完成 ---");
     }
 }

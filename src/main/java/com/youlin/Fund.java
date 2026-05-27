@@ -35,7 +35,6 @@ public class Fund {
     public LocalDate getUpdateDate() { return updateDate; }
     public void setUpdateDate(LocalDate updateDate) { this.updateDate = updateDate; }
 
-    // 用於輔助前端顯示的字串格式
     public String getFormattedDate() {
         return updateDate != null ? updateDate.toString() : "";
     }

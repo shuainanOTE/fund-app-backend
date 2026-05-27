@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
-        System.out.println("🚀 後端程式已啟動 –> Starting the System...");
+        System.out.println("=====");
+        System.out.println("🌐Starting the System...");
     }
 }

@@ -9,9 +9,7 @@ import java.util.Map;
 @Service
 public class FundService {
     private static final Map<String, String> PAGE_CONFIG = new HashMap<>();
-    // 定義日期格式
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-
     static {
         PAGE_CONFIG.put("pima3", "yp010001");
     }
@@ -24,7 +22,6 @@ public class FundService {
         updateFund("路博邁台日雙星股票基金T累積型(台幣)", "ACNB180");
         updateFund("PIMCO收益增長基金-BM級類別", "pima3");
     }
-
 
     public void updateFund(String fundName, String fundCode) {
         try {
@@ -43,7 +40,6 @@ public class FundService {
             // 4. 存入資料庫 (這裡記得把 Database.saveFundData 裡的 SQL 改成 INSERT...ON CONFLICT)
             Database.saveFundData(fund);
 
-//            System.out.println("成功更新: " + fundName + " 日期: " + updateDate);
         } catch (Exception e) {
             System.err.println("更新失敗: " + fundName);
             e.printStackTrace();
