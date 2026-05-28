@@ -1,15 +1,15 @@
 package com.youlin;
 
-public class FundDisplayDTO {
+public class FundDTO {
     public String name;
     public double nav;
     public double changePercent;
-    public String updateDate;
+    public String date;
 
-    public FundDisplayDTO(String name, double nav, double changePercent, String updateDate) {
+    public FundDTO(String name, double nav, double changePercent, String date) {
         this.name = name;
         this.nav = nav;
         this.changePercent = changePercent;
-        this.updateDate = updateDate;
+        this.date = date;
     }
 }

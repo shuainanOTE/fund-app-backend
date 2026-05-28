@@ -2,40 +2,41 @@ package com.youlin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 public class Fund {
     private Long id;
     private String name;
-
-    // 命名改為 nav，但在 JSON 輸出時維持 "nav" (或你想保持的名稱)
-    private double nav;
-
-    // 使用 LocalDate，這對後續日期運算非常方便
-    @JsonProperty("update_date")
-    private LocalDate updateDate;
+    private String type;
+    private double tempNav;
+    private LocalDate tempDate;
+    private List<Map<String, Object>> priceList;
 
     public Fund() {}
 
-    public Fund(String name, double nav, LocalDate updateDate) {
-        this.name = name;
-        this.nav = nav;
-        this.updateDate = updateDate;
+    @JsonProperty("price")
+    public void setPriceList(List<Map<String, Object>> priceList) {
+        this.priceList = priceList;
     }
 
-    // --- Standard Getters and Setters ---
+    public List<Map<String, Object>> getPriceList() {
+        return priceList;
+    }
 
+    // Getter/Setter
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public double getNav() { return nav; }
-    public void setNav(double nav) { this.nav = nav; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-    public LocalDate getUpdateDate() { return updateDate; }
-    public void setUpdateDate(LocalDate updateDate) { this.updateDate = updateDate; }
+    public void setTempNav(double nav) { this.tempNav = nav; }
+    public double getNav() { return this.tempNav; }
 
-    public String getFormattedDate() {
-        return updateDate != null ? updateDate.toString() : "";
-    }
+    public void setTempDate(LocalDate date) { this.tempDate = date; }
+    public LocalDate getDate() { return this.tempDate; }
 }
