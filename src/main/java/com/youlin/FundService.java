@@ -27,7 +27,7 @@ public class FundService {
             this.isSpecial = isSpecial;
         }
     }
-    // URL
+    // 資料
     static {
         // Fund
         FUND_REGISTRY.put("安聯台灣科技基金", new FundInfo("ACDD04", false, false));
@@ -79,11 +79,11 @@ public class FundService {
         dto.setHoldings(Database.fetchHoldingsByFundId(Database.fetchFundIdByName(name)));
         return dto;
     }
-    // 提取 淨值、日期
+    // 提取(淨值、日期)
     public void updateAllFundsNav() {
         FUND_REGISTRY.forEach((name, info) -> updateFund(name, info));
     }
-    // 提取 十大持股
+    // 提取(十大持股)
     public void updateAllFundsHoldings() {
         System.out.println("DEBUG: 觸發更新，目前實例 HashCode: " + this.hashCode());
         FUND_REGISTRY.forEach((name, info) -> {
@@ -93,7 +93,7 @@ public class FundService {
             }
         });
     }
-    // 更新 淨值、日期
+    // 更新(淨值、日期)
     private void updateFund(String fundName, FundInfo info) {
         try {
             String[] rawData = Crawler.getFundNav(info.fundCode, info.isSpecial);
@@ -110,7 +110,7 @@ public class FundService {
             e.printStackTrace();
         }
     }
-    // 更新 十大持股
+    // 更新(十大持股)
     public void syncHoldingsTask(Long fundId, FundInfo info) {
         try {
             List<String[]> holdings;
@@ -132,7 +132,7 @@ public class FundService {
             System.err.println("❌ " + info.fundCode + " 同步失敗: " + e.getMessage());
         }
     }
-    // 更新 績效
+    // 更新(績效)
     public void updateAllPerformance() {
         for (Map.Entry<String, FundInfo> entry : FUND_REGISTRY.entrySet()) {
             String fundName = entry.getKey();

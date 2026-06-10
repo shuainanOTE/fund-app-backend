@@ -102,7 +102,7 @@ public class Crawler {
         }
         return holdings;
     }
-    // 特殊 PIMCO(十大持股)
+    // 特殊 (十大持股)
     private static List<String[]> getPima3Holdings(String fundCode) throws IOException {
         String url = "https://www.moneydj.com/funddj/yp/yp013001.djhtm?a=" + fundCode;
         Document doc = Jsoup.connect(url)
@@ -156,7 +156,7 @@ public class Crawler {
         }
         return performanceList;
     }
-    // ETF(績效)
+    // ETF (績效)
     public static List<String[]> getETFPerformance(String fundCode) throws IOException {
         String url = "https://www.moneydj.com/ETF/X/Basic/Basic0008.xdjhtm?etfid=" + fundCode;
 
@@ -174,7 +174,7 @@ public class Crawler {
         Element targetRow = table.select("tr:contains(市價)").first();
 
         if (targetRow != null) {
-            Elements tds = targetRow.select("td"); // 該行中的數據欄位
+            Elements tds = targetRow.select("td");
             for (int i = 0; i < tds.size(); i++) {
                 String period = headers.get(i + 1).text().trim();
                 String rate = tds.get(i).text().trim();
