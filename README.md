@@ -15,6 +15,9 @@
     
 *   **☕ 後端 Swagger API**：https://fund-app-backend-9wbm.onrender.com/swagger-ui/index.html
     *   *點進去可以直接點 `Try it out` 測試 API，會直接去撈雲端資料庫的即時數據。*
+ 
+*   前端 GitHub 連結：``https://github.com/shuainanOTE/fund-app-frontend``
+*   後端 GitHub 連結：``https://github.com/shuainanOTE/fund-app-backend``
 
 ---
 
